@@ -1,0 +1,2 @@
+# android_yolo_truck
+将自己训练的yolo模型在android上运行

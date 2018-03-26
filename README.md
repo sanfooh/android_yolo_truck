@@ -1,6 +1,8 @@
 # 如何在android上跑yolo
 当训练好yolo的模型以后，想要将其移到移动端进行验证
 
+![image](https://github.com/sanfooh/android_yolo_truck/edit/master/snap.png)
+
  ## 利用tensorflow
  * 训练darknet yolo模型
  * 将利用darkflow将darknet yolo模型文件转成tensorflow的模型
@@ -11,7 +13,7 @@
 先要制作数据集，利用darknet对作者提供的预训练模型进行微调，具体可以看[这里](https://github.com/sanfooh/yolo_truck)，如果需标注工具，可以看[这里](https://github.com/sanfooh/quick_yolo2_label_tool)
 
 ## 利用darkflow将darknet yolo模型文件转成tensorflow的模型
-darkflow是一个利使用tensorflow框架来实现darknet的项目，它的网址在[这里](https://github.com/thtrieu/darkflow)
+darkflow是一个使用tensorflow框架来实现darknet的项目，它的网址在[这里](https://github.com/thtrieu/darkflow)
 此项目需要git clone下来，再用pip进行安装。
 
 ```
@@ -22,12 +24,12 @@ darkflow -help
 ```
 
 这样安装完以后，就可以系统全局范围内使用flow工具：
-我倾向使用原生的darknet来训练模型，而只是利用darkflow的转换模型功能，转换模型需要三个源文件，一个是darknet的网络定义文件，也就是后缀名为.cfg的文件，另一个是.weights为后缀的权重量文件，还有一个对象标签文件。
+我倾向使用原生的darknet来训练模型，而只是利用darkflow的转换模型功能，转换模型需要三个文件，一个是darknet的网络定义文件，也就是后缀名为.cfg的文件，另一个是.weights为后缀的权重量文件，还有一个对象标签文件。
 ```
 flow --model cfg/yolo.cfg --load bin/yolo.weights --labels xxx.names --savepb
 ```
 这个命令要注意的是，
-* 1、权限的文件名可以随意修改，但后缀名一定要是weights,不然会出错：
+* 1、权值的文件名可以随意修改，但后缀名一定要是weights,不然会出错：
 ```
   File "/root/anaconda3/lib/python3.6/site-packages/darkflow/dark/darknet.py", l    ine 50, in get_weight_src
     cfg_path = os.path.join(FLAGS.config, name + '.cfg')
@@ -43,9 +45,8 @@ FileNotFoundError: [Errno 2] No such file or directory: 'labels.txt'
 ```
 
 
-* 3、执行完这个命令以后，就可以生成两个文件，分别是后缀.meta和.pb的文件，其中.pb文件就是我们想要的。
 
-* 4、如果没有什么问题则形如：
+* 3、如果没有什么问题则形如：
 ```
 [root@fsi-centos truckdata]# flow --model yolo-truck.cfg --load yolo-truck.weights --labels labels.txt  --savepb
 
@@ -105,6 +106,10 @@ Rebuild a constant version ...
 ```
 
 
+* 4、执行完这个命令以后，就可以生成两个文件，分别是后缀.meta和.pb的文件，其中.pb文件就是我们想要的。
+
+
+
 需要注意的是目前yolov3的版本是无法转换成功的会提示,具体可能需要darkflow有更新：
 ```
 /root/anaconda3/lib/python3.6/site-packages/darkflow/dark/darknet.py:54: UserWarning: ./cfg/yolov3.cfg not found, use yolov3.cfg instead
@@ -125,11 +130,11 @@ git clone https://github.com/tensorflow/tensorflow.git
 
 * 使用android studio打开项目
 * 将上面产生的pb文件拷贝到asset目录下
-* build.gradle 修改
+* build.gradle 我们不编译tensorflow的代码，而是把tensorflow作为一个ARR包从JCenter直接导入，这样比较简单。相当于我们把tensorflow作为一个库来使用，修改如下：
  ```
 def nativeBuildSystem = 'none'
  ```
- 这里修改表示:我们不编译tensorflow的代码，而是把tensorflow作为一个ARR包从JCenter直接导入，这样比较简单。相当于我们把tensorflow作为一个库来使用。
+
  * 修改DetectorActivity.java代码,将其中的文件名改成自己的pb文件名
  ```
    private static final String YOLO_MODEL_FILE = "file:///android_asset/graph-tiny-yolo-voc.pb";
@@ -149,3 +154,9 @@ private static final String[] LABELS = {
 
 ## 结束
 过程并不复杂，但挺烦琐，需要多操作几次。darkflow的参数写错往往会报各种错误，跟踪一下代码，一般都可以知道为什么。
+
+参考：
+
+https://github.com/tensorflow/tensorflow/tree/master/tensorflow/examples/android
+https://pjreddie.com/darknet/yolo/
+https://github.com/thtrieu/darkflow

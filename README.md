@@ -1,7 +1,7 @@
 # 如何在android上跑yolo
 当训练好yolo的模型以后，想要将其移到移动端进行验证
 
-![image](https://github.com/sanfooh/android_yolo_truck/edit/master/snap.png)
+![i](https://github.com/sanfooh/android_yolo_truck/blob/master/snap.png)
 
  ## 利用tensorflow
  * 训练darknet yolo模型

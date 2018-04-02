@@ -7,7 +7,7 @@
  * 训练darknet yolo模型
  * 将利用darkflow将darknet yolo模型文件转成tensorflow的模型
  * 修改tensorflow的官方例子
- 
+ ## 相关教学视频
  [讲解视频](https://edu.csdn.net/course/detail/7620)
 
 ## 训练darknet yolo模型
